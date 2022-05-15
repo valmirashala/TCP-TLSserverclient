@@ -28,3 +28,20 @@ while True and message.lower()!="end":
 	
 	if not socket:
 		sys.exit()
+		message = input("Sheno mesazhin per serverin: ")
+	key1= hashlib.sha256()
+	key1.update(soct.gethostname().encode('utf-8'))
+	key2=key1.hexdigest()
+	key2=key2[:32]
+	key3=base64.b64encode(key2.encode('utf-8'))
+	cipher_suite = Fernet(key3) 
+
+	encoded_text = cipher_suite.encrypt(message.encode('utf-8'))
+	if message.lower()!="bye":
+		sendMessage(encoded_text,socket)
+		recieved=socket.recv(1024).decode("utf-8")
+		decrpyted=cipher_suite.decrypt(recieved.encode('utf-8'))
+		print(">>Message sent from server: ",decrpyted.decode('utf-8'))
+	else:
+
+		socket.close()
